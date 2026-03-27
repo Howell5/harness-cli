@@ -1,0 +1,29 @@
+{
+  "name": "harness-cli",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "harness": "./bin/harness.ts"
+  },
+  "scripts": {
+    "dev": "tsx bin/harness.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "biome check src/ bin/ tests/",
+    "lint:fix": "biome check --write src/ bin/ tests/"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "chalk": "^5.6.2",
+    "yaml": "^2.8.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.9",
+    "@types/node": "^25.5.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.2"
+  }
+}
