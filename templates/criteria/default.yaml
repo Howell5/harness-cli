@@ -1,0 +1,26 @@
+dimensions:
+  - id: functionality
+    weight: 0.40
+    checklist:
+      - "All features in feature-list.json work as described"
+      - "No runtime errors in console"
+      - "Page loads without errors"
+    tool: bash_command
+
+  - id: code_quality
+    weight: 0.35
+    checklist:
+      - "No TypeScript compilation errors (tsc --noEmit)"
+      - "No linter errors"
+      - "No unused imports or variables"
+    tool: bash_command
+
+  - id: design_consistency
+    weight: 0.25
+    checklist:
+      - "Uses existing project components and patterns"
+      - "Follows project naming conventions"
+      - "Consistent spacing and layout approach"
+    tool: code_review
+
+passing_threshold: 7.5
