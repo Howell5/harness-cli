@@ -8,9 +8,11 @@ beforeEach(() => mkdirSync(TMP, { recursive: true }));
 afterEach(() => rmSync(TMP, { recursive: true, force: true }));
 
 describe("loadCriteria", () => {
-  it("loads and validates criteria YAML", () => {
-    const file = join(TMP, "criteria.yaml");
-    writeFileSync(file, `dimensions:
+	it("loads and validates criteria YAML", () => {
+		const file = join(TMP, "criteria.yaml");
+		writeFileSync(
+			file,
+			`dimensions:
   - id: functionality
     weight: 0.6
     checklist:
@@ -20,16 +22,19 @@ describe("loadCriteria", () => {
     checklist:
       - "No TypeScript errors"
 passing_threshold: 7.5
-`);
-    const criteria = loadCriteria(file);
-    expect(criteria.dimensions).toHaveLength(2);
-    expect(criteria.dimensions[0].id).toBe("functionality");
-    expect(criteria.passing_threshold).toBe(7.5);
-  });
+`,
+		);
+		const criteria = loadCriteria(file);
+		expect(criteria.dimensions).toHaveLength(2);
+		expect(criteria.dimensions[0].id).toBe("functionality");
+		expect(criteria.passing_threshold).toBe(7.5);
+	});
 
-  it("throws if weights do not sum to 1.0", () => {
-    const file = join(TMP, "bad.yaml");
-    writeFileSync(file, `dimensions:
+	it("throws if weights do not sum to 1.0", () => {
+		const file = join(TMP, "bad.yaml");
+		writeFileSync(
+			file,
+			`dimensions:
   - id: a
     weight: 0.3
     checklist: ["x"]
@@ -37,13 +42,14 @@ passing_threshold: 7.5
     weight: 0.3
     checklist: ["y"]
 passing_threshold: 7.0
-`);
-    expect(() => loadCriteria(file)).toThrow(/weights must sum to 1/i);
-  });
+`,
+		);
+		expect(() => loadCriteria(file)).toThrow(/weights must sum to 1/i);
+	});
 
-  it("throws if dimensions array is empty", () => {
-    const file = join(TMP, "empty.yaml");
-    writeFileSync(file, "dimensions: []\npassing_threshold: 7.0\n");
-    expect(() => loadCriteria(file)).toThrow(/at least one dimension/i);
-  });
+	it("throws if dimensions array is empty", () => {
+		const file = join(TMP, "empty.yaml");
+		writeFileSync(file, "dimensions: []\npassing_threshold: 7.0\n");
+		expect(() => loadCriteria(file)).toThrow(/at least one dimension/i);
+	});
 });

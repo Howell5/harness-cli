@@ -8,44 +8,47 @@ import { ProcessManager } from "../orchestrator/process-manager.js";
 import type { Verbosity } from "../types.js";
 
 export interface EvalOptions {
-  criteria: string;
-  url?: string;
-  config?: string;
-  verbosity: Verbosity;
+	criteria: string;
+	url?: string;
+	config?: string;
+	verbosity: Verbosity;
 }
 
 export async function evalCommand(options: EvalOptions): Promise<void> {
-  const criteriaPath = resolve(options.criteria);
-  if (!existsSync(criteriaPath)) {
-    console.error(`Criteria file not found: ${criteriaPath}`);
-    process.exit(1);
-  }
+	const criteriaPath = resolve(options.criteria);
+	if (!existsSync(criteriaPath)) {
+		console.error(`Criteria file not found: ${criteriaPath}`);
+		process.exit(1);
+	}
 
-  loadCriteria(criteriaPath); // validate
+	loadCriteria(criteriaPath); // validate
 
-  const config = loadConfig(options.config);
-  const emitter = new HarnessEmitter();
-  const renderer = new TextRenderer(emitter, options.verbosity);
-  const pm = new ProcessManager(emitter);
+	const config = loadConfig(options.config);
+	const emitter = new HarnessEmitter();
+	const renderer = new TextRenderer(emitter, options.verbosity);
+	const pm = new ProcessManager(emitter);
 
-  const prompt = options.url
-    ? `Evaluate the project. Criteria: ${criteriaPath}\nURL: ${options.url}\n\nWrite scores.json and feedback.md.`
-    : `Evaluate the project. Criteria: ${criteriaPath}\n\nWrite scores.json and feedback.md.`;
+	const prompt = options.url
+		? `Evaluate the project. Criteria: ${criteriaPath}\nURL: ${options.url}\n\nWrite scores.json and feedback.md.`
+		: `Evaluate the project. Criteria: ${criteriaPath}\n\nWrite scores.json and feedback.md.`;
 
-  const result = await pm.spawn({
-    role: "evaluator",
-    systemPrompt: config.prompts.evaluator,
-    allowedTools: config.evaluator.allowed_tools,
-    inputPrompt: prompt,
-    workingDir: process.cwd(),
-  });
+	const result = await pm.spawn({
+		role: "evaluator",
+		systemPrompt: config.prompts.evaluator,
+		allowedTools: config.evaluator.allowed_tools,
+		inputPrompt: prompt,
+		workingDir: process.cwd(),
+	});
 
-  renderer.dispose();
+	renderer.dispose();
 
-  const scoresPath = resolve("scores.json");
-  if (existsSync(scoresPath)) {
-    console.log("\nScores:", JSON.stringify(JSON.parse(readFileSync(scoresPath, "utf-8")), null, 2));
-  }
+	const scoresPath = resolve("scores.json");
+	if (existsSync(scoresPath)) {
+		console.log(
+			"\nScores:",
+			JSON.stringify(JSON.parse(readFileSync(scoresPath, "utf-8")), null, 2),
+		);
+	}
 
-  process.exit(result.exitCode === 0 ? 0 : 1);
+	process.exit(result.exitCode === 0 ? 0 : 1);
 }
