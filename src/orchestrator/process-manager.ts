@@ -65,6 +65,8 @@ export class ProcessManager {
 			config.allowedTools.join(","),
 			"--output-format",
 			"text",
+			"--permission-mode",
+			"bypassPermissions",
 		];
 		if (config.maxTurns !== undefined) {
 			args.push("--max-turns", String(config.maxTurns));
