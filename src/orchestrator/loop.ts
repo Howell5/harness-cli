@@ -26,7 +26,7 @@ interface LoopResult {
 
 export async function runHarnessLoop(options: LoopOptions): Promise<LoopResult> {
 	const { config, projectDir, spec, specFile, emitter, processManager } = options;
-	const harnessDir = join(projectDir, ".harness");
+	const harnessDir = join(projectDir, ".harnex");
 	const stateStore = new StateStore(harnessDir);
 	const featureListPath = join(projectDir, "feature-list.json");
 	const progressPath = join(projectDir, "progress.txt");
@@ -156,7 +156,7 @@ export async function runHarnessLoop(options: LoopOptions): Promise<LoopResult> 
 			scores,
 			weighted_avg: weightedAvg,
 			passed,
-			feedback_file: join(".harness", "feedback", `iter-${iteration}.md`),
+			feedback_file: join(".harnex", "feedback", `iter-${iteration}.md`),
 		});
 
 		if (passed) {

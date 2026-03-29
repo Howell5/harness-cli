@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "type": "module",
   "bin": {
-    "harness": "./dist/bin/harness.js"
+    "harnex": "./dist/bin/harnex.js"
   },
   "files": [
     "dist",
@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "build": "tsup",
-    "dev": "tsx bin/harness.ts",
+    "dev": "tsx bin/harnex.ts",
     "prepublishOnly": "pnpm build",
     "test": "vitest run",
     "test:watch": "vitest",

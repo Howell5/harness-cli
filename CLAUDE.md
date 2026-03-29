@@ -1,4 +1,4 @@
-# CLAUDE.md — harness-cli
+# CLAUDE.md — harnex
 
 ## Project Overview
 
@@ -7,7 +7,7 @@ Multi-agent orchestration CLI on top of Claude Code. Spawns `claude` CLI subproc
 ## Tech Stack
 
 - TypeScript (ESM, Node16 module resolution)
-- pnpm + tsx (no build step, direct TS execution)
+- pnpm, tsx (dev), tsup (build to JS for npm publish)
 - vitest for testing
 - biome for lint/format (tabs, 100 char line width)
 - yaml + chalk as runtime dependencies
@@ -15,13 +15,13 @@ Multi-agent orchestration CLI on top of Claude Code. Spawns `claude` CLI subproc
 ## Architecture
 
 ```
-bin/harness.ts          CLI entry point (parseArgs routing)
+bin/harnex.ts           CLI entry point (parseArgs routing)
 src/commands/           Thin command handlers (run, plan, eval)
 src/orchestrator/       Core loop + process manager
 src/state/              Filesystem state (feature-list.json, state.yaml, progress.txt)
 src/evaluator/          Criteria loading + weighted scoring
 src/events/             Typed event emitter + colored text renderer
-src/config/             harness.yaml loader with deep merge
+src/config/             harnex.yaml loader with deep merge
 prompts/                System prompts for planner/generator/evaluator agents
 templates/              Default config + criteria YAML templates
 ```

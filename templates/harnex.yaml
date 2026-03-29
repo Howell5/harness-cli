@@ -1,5 +1,5 @@
-# Harness CLI configuration
-# Copy to your project root as harness.yaml and customize
+# Harnex configuration
+# Copy to your project root as harnex.yaml and customize
 
 max_iterations: 15
 passing_threshold: 7.5

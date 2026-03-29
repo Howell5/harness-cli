@@ -46,7 +46,7 @@ describe("StateStore", () => {
 			scores: { quality: 8.0 },
 			weighted_avg: 8.0,
 			passed: true,
-			feedback_file: ".harness/feedback/iter-1.md",
+			feedback_file: ".harnex/feedback/iter-1.md",
 		});
 		const loaded = store.load();
 		if (!loaded) throw new Error("State not found");

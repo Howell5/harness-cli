@@ -91,17 +91,17 @@ async function main() {
 
 function printHelp() {
 	console.log(`
-harness — Multi-agent orchestration for Claude Code
+harnex — Multi-agent orchestration for Claude Code
 
 Usage:
-  harness run --spec "..."              Full plan → generate → evaluate loop
-  harness run --spec-file ./task.md     Spec from file
-  harness run --resume                  Resume from .harness/state.yaml
-  harness plan --spec "..."             Run planner only
-  harness eval --criteria ./criteria.yaml  Run evaluator only
+  harnex run --spec "..."              Full plan → generate → evaluate loop
+  harnex run --spec-file ./task.md     Spec from file
+  harnex run --resume                  Resume from .harnex/state.yaml
+  harnex plan --spec "..."             Run planner only
+  harnex eval --criteria ./criteria.yaml  Run evaluator only
 
 Options:
-  --config <path>    Path to harness.yaml config
+  --config <path>    Path to harnex.yaml config
   -v                 Verbose output (agent actions)
   -vv                Debug output (full claude stdout)
   -h, --help         Show this help

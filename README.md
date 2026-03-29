@@ -43,7 +43,7 @@ All inter-agent communication happens via filesystem (spec.md, feature-list.json
 npm install -g harnex
 ```
 
-After install, the `harness` command is available globally.
+After install, the `harnex` command is available globally.
 
 ## Usage
 
@@ -51,37 +51,37 @@ After install, the `harness` command is available globally.
 
 ```bash
 # Inline spec
-harness run --spec "Add user authentication with JWT"
+harnex run --spec "Add user authentication with JWT"
 
 # Spec from file
-harness run --spec-file ./task.md
+harnex run --spec-file ./task.md
 
 # With custom config
-harness run --spec "..." --config ./harness.yaml
+harnex run --spec "..." --config ./harnex.yaml
 ```
 
 ### Run planner only
 
 ```bash
-harness plan --spec "Build a dashboard with charts"
+harnex plan --spec "Build a dashboard with charts"
 ```
 
 ### Run evaluator only
 
 ```bash
-harness eval --criteria ./criteria.yaml
+harnex eval --criteria ./criteria.yaml
 ```
 
 ### Verbosity
 
 ```bash
-npx tsx bin/harness.ts run --spec "..." -v    # agent actions
-npx tsx bin/harness.ts run --spec "..." -vv   # full claude stdout
+harnex run --spec "..." -v    # agent actions
+harnex run --spec "..." -vv   # full claude stdout
 ```
 
 ## Configuration
 
-Copy `templates/harness.yaml` to your project root:
+Copy `templates/harnex.yaml` to your project root:
 
 ```yaml
 max_iterations: 15        # max generate→evaluate cycles
@@ -143,10 +143,10 @@ Weights must sum to 1.0. Scores are calculated as `(passed items / total items) 
 
 ## State Management
 
-Runtime state is stored in `.harness/` within the target project:
+Runtime state is stored in `.harnex/` within the target project:
 
 ```
-.harness/
+.harnex/
   state.yaml          # orchestration state (phase, iteration, progress)
 feature-list.json     # feature checklist with status tracking
 progress.txt          # human-readable progress for context continuity
@@ -158,8 +158,8 @@ feedback.md           # evaluator feedback
 ## Project Structure
 
 ```
-harness-cli/
-├── bin/harness.ts              # CLI entry point
+harnex/
+├── bin/harnex.ts               # CLI entry point
 ├── src/
 │   ├── types.ts                # shared type definitions
 │   ├── commands/               # run, plan, eval command handlers
@@ -169,7 +169,7 @@ harness-cli/
 │   ├── state/                  # feature-list, state-store, progress
 │   ├── evaluator/              # criteria loading + weighted scoring
 │   ├── events/                 # typed event emitter + colored output
-│   └── config/                 # harness.yaml loader with defaults
+│   └── config/                 # harnex.yaml loader with defaults
 ├── prompts/                    # system prompts for each agent role
 ├── templates/                  # default config + criteria templates
 └── tests/                      # vitest — 33 tests across 11 files

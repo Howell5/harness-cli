@@ -1,4 +1,4 @@
-# AGENTS.md — harness-cli
+# AGENTS.md — harnex
 
 Guide for AI agents working on this codebase.
 
@@ -16,7 +16,7 @@ pnpm lint           # biome check, fix with pnpm lint:fix
 | What | Where |
 |------|-------|
 | Shared types | `src/types.ts` |
-| CLI entry | `bin/harness.ts` |
+| CLI entry | `bin/harnex.ts` |
 | Core loop | `src/orchestrator/loop.ts` |
 | Process spawning | `src/orchestrator/process-manager.ts` |
 | State files | `src/state/` (feature-list, state-store, progress) |
@@ -24,16 +24,16 @@ pnpm lint           # biome check, fix with pnpm lint:fix
 | Events/output | `src/events/` (emitter, text-renderer) |
 | Config | `src/config/loader.ts` |
 | Agent prompts | `prompts/` (planner.md, generator.md, evaluator.md) |
-| Templates | `templates/` (harness.yaml, criteria/default.yaml) |
+| Templates | `templates/` (harnex.yaml, criteria/default.yaml) |
 | Tests | `tests/` (mirrors src/ structure) |
 
 ## How the System Works
 
-1. `harness run --spec "..."` calls `runHarnessLoop()` in `src/orchestrator/loop.ts`
+1. `harnex run --spec "..."` calls `runHarnessLoop()` in `src/orchestrator/loop.ts`
 2. Loop spawns `claude -p` subprocesses via `ProcessManager`
 3. Each agent reads/writes files in the target project directory
 4. State flows through filesystem: `spec.md` → `feature-list.json` → `progress.txt` → `scores.json` → `feedback.md`
-5. `.harness/state.yaml` tracks orchestration state (phase, iteration, resets)
+5. `.harnex/state.yaml` tracks orchestration state (phase, iteration, resets)
 
 ## Adding a New Agent Role
 

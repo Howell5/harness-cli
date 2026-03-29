@@ -1,7 +1,7 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-	entry: ["bin/harness.ts"],
+	entry: ["bin/harnex.ts"],
 	format: ["esm"],
 	target: "node20",
 	outDir: "dist/bin",
