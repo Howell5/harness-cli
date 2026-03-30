@@ -12,6 +12,17 @@ const AGENT_PREFIX: Record<AgentRole, string> = {
 const HARNESS_PREFIX = chalk.white.bold("[HARNESS] ");
 const ERROR_PREFIX = chalk.red("[ERROR]   ");
 
+function formatDuration(ms: number): string {
+	const seconds = Math.floor(ms / 1000);
+	if (seconds < 60) return `${seconds}s`;
+	const minutes = Math.floor(seconds / 60);
+	const remainingSeconds = seconds % 60;
+	if (minutes < 60) return `${minutes}m ${remainingSeconds}s`;
+	const hours = Math.floor(minutes / 60);
+	const remainingMinutes = minutes % 60;
+	return `${hours}h ${remainingMinutes}m`;
+}
+
 export class TextRenderer {
 	private unsub: () => void;
 
@@ -37,19 +48,32 @@ export class TextRenderer {
 					`${HARNESS_PREFIX}${chalk.green("✓")} Done, ${event.iterations} iteration(s), ${event.resets} reset(s), final score ${event.score}`,
 				);
 				break;
-			case "agent:start":
-				this.output(`${AGENT_PREFIX[event.agent]}Starting...`);
+			case "agent:start": {
+				const parts: string[] = [];
+				if (event.iteration !== undefined) parts.push(`iter ${event.iteration}`);
+				if (event.featuresCompleted !== undefined && event.featuresTotal !== undefined) {
+					parts.push(`${event.featuresCompleted}/${event.featuresTotal} features`);
+				}
+				const suffix = parts.length > 0 ? ` (${parts.join(", ")})` : "...";
+				this.output(`${AGENT_PREFIX[event.agent]}Starting${suffix}`);
 				break;
+			}
 			case "agent:output":
 				if (this.verbosity >= 1) {
 					this.output(`${AGENT_PREFIX[event.agent]}${event.line}`);
 				}
 				break;
-			case "agent:exit":
-				if (this.verbosity >= 1) {
-					this.output(`${AGENT_PREFIX[event.agent]}Exited (code ${event.exitCode})`);
+			case "agent:exit": {
+				const duration = formatDuration(event.durationMs);
+				if (event.exitCode === 0) {
+					this.output(`${AGENT_PREFIX[event.agent]}Done (${duration})`);
+				} else {
+					this.output(
+						`${AGENT_PREFIX[event.agent]}Failed (exit ${event.exitCode}, ${duration})`,
+					);
 				}
 				break;
+			}
 			case "agent:reset":
 				this.output(
 					`${AGENT_PREFIX[event.agent]}${chalk.yellow("⚠")} Context reset #${event.count}`,
