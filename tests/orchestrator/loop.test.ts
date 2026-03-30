@@ -6,6 +6,10 @@ import { runHarnessLoop } from "../../src/orchestrator/loop.js";
 import type { ProcessManager } from "../../src/orchestrator/process-manager.js";
 import type { AgentConfig, AgentResult, HarnessConfig } from "../../src/types.js";
 
+vi.mock("../../src/orchestrator/slug.js", () => ({
+	generateTaskSlug: vi.fn().mockResolvedValue("test-task-2026-03-30"),
+}));
+
 const TMP = join(import.meta.dirname, "../../.test-tmp/loop");
 beforeEach(() => mkdirSync(TMP, { recursive: true }));
 afterEach(() => rmSync(TMP, { recursive: true, force: true }));
@@ -44,31 +48,35 @@ passing_threshold: 7.5
 `,
 		);
 
+		// Task dir created by loop.ts: TMP/.harnex/tasks/test-task-2026-03-30/
+		const taskDir = join(TMP, ".harnex", "tasks", "test-task-2026-03-30");
+
 		const pm = createMockPM({
 			planner: async () => {
-				writeFileSync(join(TMP, "spec.md"), "# Spec\nBuild a thing\n");
+				mkdirSync(taskDir, { recursive: true });
+				writeFileSync(join(taskDir, "spec.md"), "# Spec\nBuild a thing\n");
 				writeFileSync(
-					join(TMP, "feature-list.json"),
+					join(taskDir, "feature-list.json"),
 					JSON.stringify([{ id: "feat-001", desc: "Do thing", status: "pending" }]),
 				);
 				return { exitCode: 0, stdout: "done", stderr: "" };
 			},
 			generator: async () => {
 				writeFileSync(
-					join(TMP, "feature-list.json"),
+					join(taskDir, "feature-list.json"),
 					JSON.stringify([
 						{ id: "feat-001", desc: "Do thing", status: "completed", commit: "abc" },
 					]),
 				);
-				writeFileSync(join(TMP, "progress.txt"), "ALL_FEATURES_COMPLETE\n");
+				writeFileSync(join(taskDir, "progress.txt"), "ALL_FEATURES_COMPLETE\n");
 				return { exitCode: 0, stdout: "done", stderr: "" };
 			},
 			evaluator: async () => {
 				writeFileSync(
-					join(TMP, "scores.json"),
+					join(taskDir, "scores.json"),
 					JSON.stringify({ functionality: 9.0, code_quality: 8.5, design_consistency: 8.0 }),
 				);
-				writeFileSync(join(TMP, "feedback.md"), "# Feedback\nLooks good.\n");
+				writeFileSync(join(taskDir, "feedback.md"), "# Feedback\nLooks good.\n");
 				return { exitCode: 0, stdout: "done", stderr: "" };
 			},
 		});
