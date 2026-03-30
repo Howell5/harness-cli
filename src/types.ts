@@ -101,6 +101,18 @@ export type HarnessEvent =
 	| { type: "agent:exit"; agent: AgentRole; exitCode: number; durationMs: number }
 	| { type: "agent:reset"; agent: AgentRole; count: number }
 	| {
+			type: "agent:tool_call";
+			agent: AgentRole;
+			tool: string;
+			input: Record<string, unknown>;
+	  }
+	| {
+			type: "agent:tool_result";
+			agent: AgentRole;
+			tool: string;
+			result: string;
+	  }
+	| {
 			type: "eval:score";
 			iteration: number;
 			scores: EvalScores;
