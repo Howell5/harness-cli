@@ -1,11 +1,22 @@
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import type { Verbosity } from "../src/types.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const args = process.argv.slice(2);
 const command = args[0];
 
 if (!command || command === "--help" || command === "-h") {
 	printHelp();
+	process.exit(0);
+}
+
+if (command === "--version" || command === "-V" || command === "version") {
+	const pkg = JSON.parse(readFileSync(resolve(__dirname, "../package.json"), "utf-8"));
+	console.log(pkg.version);
 	process.exit(0);
 }
 
@@ -81,6 +92,11 @@ async function main() {
 			});
 			break;
 		}
+		case "init": {
+			const { initCommand } = await import("../src/commands/init.js");
+			initCommand();
+			break;
+		}
 		default:
 			console.error(`Unknown command: ${command}`);
 			printHelp();
@@ -98,6 +114,8 @@ Usage:
   harnex run --resume                  Resume from .harnex/state.yaml
   harnex plan --spec "..."             Run planner only
   harnex eval --criteria ./criteria.yaml  Run evaluator only
+  harnex init                          Initialize harnex.yaml + criteria in current dir
+  harnex version                       Show version
 
 Options:
   --config <path>    Path to harnex.yaml config
