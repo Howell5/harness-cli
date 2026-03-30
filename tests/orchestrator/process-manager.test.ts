@@ -22,7 +22,8 @@ describe("ProcessManager", () => {
 
 		expect(result.exitCode).toBe(0);
 		expect(result.stdout).toContain("Mock claude");
-		expect(events).toContain("agent:start");
+		expect(events).not.toContain("agent:start");
+		expect(events).toContain("agent:output");
 		expect(events).toContain("agent:exit");
 	});
 
