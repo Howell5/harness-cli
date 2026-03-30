@@ -30,6 +30,7 @@ function getVersion(): string {
 
 export interface AboutOptions {
 	config?: string;
+	json?: boolean;
 }
 
 export interface AboutInfo {
@@ -136,5 +137,9 @@ function printAboutText(info: AboutInfo): void {
 export async function aboutCommand(options: AboutOptions): Promise<void> {
 	const config = loadConfig(options.config);
 	const info = collectAboutInfo(config);
-	printAboutText(info);
+	if (options.json) {
+		console.log(JSON.stringify(info, null, 2));
+	} else {
+		printAboutText(info);
+	}
 }
