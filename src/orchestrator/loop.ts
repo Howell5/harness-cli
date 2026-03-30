@@ -35,6 +35,7 @@ export async function runHarnessLoop(options: LoopOptions): Promise<LoopResult> 
 	stateStore.initialize(spec, config.max_iterations);
 
 	// Phase 1: Planning
+	emitter.emit({ type: "agent:start", agent: "planner" });
 	const plannerPrompt = specFile
 		? `Read the task from: ${specFile}\n\nCreate spec.md and feature-list.json.`
 		: `Task: ${spec}\n\nCreate spec.md and feature-list.json. Read the existing codebase first.`;
@@ -80,6 +81,14 @@ export async function runHarnessLoop(options: LoopOptions): Promise<LoopResult> 
 		while (!allDone) {
 			const beforeFeatures = loadFeatureList(featureListPath);
 			const beforeCompleted = getCompletedCount(beforeFeatures);
+
+			emitter.emit({
+				type: "agent:start",
+				agent: "generator",
+				iteration,
+				featuresCompleted: beforeCompleted,
+				featuresTotal: beforeFeatures.length,
+			});
 
 			await processManager.spawn({
 				role: "generator",
@@ -130,6 +139,15 @@ export async function runHarnessLoop(options: LoopOptions): Promise<LoopResult> 
 		}
 
 		const criteria = loadCriteria(criteriaPath);
+		const evalFeatures = loadFeatureList(featureListPath);
+
+		emitter.emit({
+			type: "agent:start",
+			agent: "evaluator",
+			iteration,
+			featuresCompleted: getCompletedCount(evalFeatures),
+			featuresTotal: evalFeatures.length,
+		});
 
 		await processManager.spawn({
 			role: "evaluator",
