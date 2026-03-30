@@ -1,6 +1,6 @@
 {
   "name": "harnex",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "type": "module",
   "bin": {
     "harnex": "./dist/bin/harnex.js"
@@ -23,6 +23,7 @@
     "node": ">=20.0.0"
   },
   "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.2.87",
     "chalk": "^5.6.2",
     "yaml": "^2.8.3"
   },

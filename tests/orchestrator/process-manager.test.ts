@@ -8,6 +8,7 @@ vi.mock("@anthropic-ai/claude-agent-sdk", () => ({
 }));
 
 import { query } from "@anthropic-ai/claude-agent-sdk";
+
 const mockQuery = vi.mocked(query);
 
 function createMockStream(messages: Array<Record<string, unknown>>) {
@@ -31,17 +32,13 @@ describe("ProcessManager", () => {
 				{
 					type: "assistant",
 					message: {
-						content: [
-							{ type: "tool_use", name: "Read", input: { file_path: "package.json" } },
-						],
+						content: [{ type: "tool_use", name: "Read", input: { file_path: "package.json" } }],
 					},
 				},
 				{
 					type: "user",
 					message: {
-						content: [
-							{ type: "tool_result", tool_use_id: "t1", content: '{"name":"harnex"}' },
-						],
+						content: [{ type: "tool_result", tool_use_id: "t1", content: '{"name":"harnex"}' }],
 					},
 				},
 				{ type: "result", subtype: "success", result: "Done reading" },
@@ -80,6 +77,7 @@ describe("ProcessManager", () => {
 		emitter.on((e) => events.push(e));
 
 		mockQuery.mockReturnValue(
+			// biome-ignore lint/correctness/useYield: intentionally throwing before yield
 			(async function* () {
 				throw new Error("Rate limit exceeded");
 			})() as ReturnType<typeof query>,
@@ -108,7 +106,9 @@ describe("ProcessManager", () => {
 		const emitter = new HarnessEmitter();
 
 		mockQuery.mockReturnValue(
-			createMockStream([{ type: "result", subtype: "success", result: "ok" }]) as ReturnType<typeof query>,
+			createMockStream([{ type: "result", subtype: "success", result: "ok" }]) as ReturnType<
+				typeof query
+			>,
 		);
 
 		const pm = new ProcessManager(emitter);
