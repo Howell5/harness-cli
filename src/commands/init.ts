@@ -3,7 +3,17 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const PACKAGE_ROOT = resolve(__dirname, "../..");
+const PACKAGE_ROOT = findPackageRoot(__dirname);
+
+function findPackageRoot(from: string): string {
+	let dir = from;
+	while (true) {
+		if (existsSync(resolve(dir, "package.json"))) return dir;
+		const parent = dirname(dir);
+		if (parent === dir) throw new Error("package.json not found");
+		dir = parent;
+	}
+}
 
 export function initCommand(): void {
 	const cwd = process.cwd();

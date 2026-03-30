@@ -15,9 +15,24 @@ if (!command || command === "--help" || command === "-h") {
 }
 
 if (command === "--version" || command === "-V" || command === "version") {
-	const pkg = JSON.parse(readFileSync(resolve(__dirname, "../package.json"), "utf-8"));
+	const pkg = JSON.parse(readFileSync(findPackageJson(__dirname), "utf-8"));
 	console.log(pkg.version);
 	process.exit(0);
+}
+
+function findPackageJson(from: string): string {
+	let dir = from;
+	while (true) {
+		const candidate = resolve(dir, "package.json");
+		try {
+			readFileSync(candidate);
+			return candidate;
+		} catch {
+			const parent = dirname(dir);
+			if (parent === dir) throw new Error("package.json not found");
+			dir = parent;
+		}
+	}
 }
 
 function getVerbosity(argv: string[]): Verbosity {
